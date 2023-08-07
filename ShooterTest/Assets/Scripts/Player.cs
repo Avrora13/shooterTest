@@ -24,6 +24,9 @@ public class Player : MonoBehaviour
     public int health = 100;
     public bool isReload = false;
     [SerializeField] Manager manager;
+    public GameObject bulletPrefab;
+    public Transform firePoint;
+    public float bulletSpeed = 10f;
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -62,11 +65,9 @@ public class Player : MonoBehaviour
 
     void Shoot()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(playerCam.transform.position, playerCam.transform.forward, out hit, shootRange, shootableLayer))
-        {
-            hit.collider.gameObject.GetComponent<Enemy>().Hit();
-            manager.CheckEnemy();
-        }
+        Vector3 fireDirection = Camera.main.transform.forward;
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        rb.velocity = fireDirection * bulletSpeed;
     }
 }
